@@ -68,7 +68,7 @@ def parametros(S0):
     y = odeint(dfB, S0, t_grafico)
     # print(y)
 
-    figure, eixo = plotter.subplots(2, 1)
+    figure, eixo = plotter.subplots(1, 2)
     plotter.subplots_adjust(hspace=2)
     eixo[0].set_title("G1 visível")
 
