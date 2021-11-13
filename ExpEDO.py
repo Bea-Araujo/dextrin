@@ -11,7 +11,7 @@ import tkinter as tk
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 window = tk.Tk()
-window.title("Dextroit")
+window.title("Dextrin simulator")
 window.configure(background="#15224F",width=500,height=400)
 ##construção de entries e labels de concentração
 
@@ -71,11 +71,11 @@ def parametros(S0):
     figure, eixo = plotter.subplots(1, 2)
     plotter.subplots_adjust(hspace=2)
     eixo[0].set_title("G1 visível")
-    eixo[0].legend(loc="upper left")
+
 
     eixo[0].plot(t_grafico, y, label = ["G1","G2","G3","G4","G5","G6","G7"])
     eixo[0].set_xlabel('Tempo')
-
+    eixo[0].legend(loc="upper left")
     eixo[0].set_ylabel('Concentração')
     # plt.figure("G1 visível")
     # plt.plot(t_grafico, y)
