@@ -71,9 +71,9 @@ def parametros(S0):
     figure, eixo = plotter.subplots(1, 2)
     plotter.subplots_adjust(hspace=2)
     eixo[0].set_title("G1 visível")
+    eixo[0].legend(loc="upper left")
 
-    eixo[0].plot(t_grafico, y)
-
+    eixo[0].plot(t_grafico, y, label = ["G1","G2","G3","G4","G5","G6","G7"])
     eixo[0].set_xlabel('Tempo')
 
     eixo[0].set_ylabel('Concentração')
@@ -99,11 +99,14 @@ def parametros(S0):
     #plt.show()
     eixo[1].set_title("G1 invisível")
 
-    eixo[1].plot(t_grafico, y2)
+    eixo[1].plot(t_grafico, y2, label = ["G2","G3","G4","G5","G6","G7"])
 
     eixo[1].set_xlabel('Tempo')
 
     eixo[1].set_ylabel('Concentração')
+
+    eixo[1].legend(loc="upper right")
+
     plotter.show()
     return
 
