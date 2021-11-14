@@ -12,7 +12,7 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 window = tk.Tk()
 window.title("Dextrin simulator")
-window.configure(background="#15224F",width=500,height=400)
+window.configure(background="white",width=500,height=400)
 ##construção de entries e labels de concentração
 
 variaveis = [0,0,0,0,0,0,0,0,0]
@@ -107,7 +107,9 @@ def parametros(S0):
 
     eixo[1].legend(loc="upper right")
 
-    plotter.show()
+
+    canvas = FigureCanvasTkAgg(figure, window)
+    canvas.get_tk_widget().grid(row=10, column=5)
     return
 
 
@@ -238,16 +240,21 @@ while contador < len(variaveis):
     concentracao.config(width=15)
     identidade_entries.append(concentracao)
     if contador < 7:
-        textos = tk.Label(text="Concentração G" + str(contador+1), fg="white", bg="#1B1F49", width=35, height=3)
+        textos = tk.Label(text="Concentração G" + str(contador+1), fg="black", bg="white", width=35, height=3)
+        textos.grid(row=contador + 1, column=1)
+        concentracao.grid(row=contador + 1, column=2)
     elif contador == 7:
-        textos = tk.Label(text="Concentração Exoenzima", fg="white", bg="#1B1F49", width=35, height=3)
+        textos = tk.Label(text="Concentração Exoenzima", fg="black", bg="white", width=35, height=3)
+        textos.grid(row=1, column=3)
+        concentracao.grid(row=1, column=4)
     elif contador == 8:
-        textos = tk.Label(text="Concentração Endoenzima", fg="white", bg="#1B1F49", width=35, height=3)
-    textos.grid(row=contador+1,column=1)
-    concentracao.grid(row=contador + 1, column=2)
+        textos = tk.Label(text="Concentração Endoenzima", fg="black", bg="white", width=35, height=3)
+        textos.grid(row=2, column=3)
+        concentracao.grid(row=2, column=4)
+
     contador += 1
 
 botao_enviar = tk.Button(window, width=15, text="Enviar!", bg="#aff587", command=salvar_valores)
-botao_enviar.grid(row=10, column=1)
+botao_enviar.grid(row=3, column=4)
 
 window.mainloop()
