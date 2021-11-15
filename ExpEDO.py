@@ -8,11 +8,11 @@ import matplotlib.pyplot as plotter
 from scipy.integrate import odeint
 import numpy as np
 import tkinter as tk
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+import pandas as pd
 
 window = tk.Tk()
 window.title("Dextrin simulator")
-window.configure(background="#15224F",width=500,height=400)
+window.configure(background="#1B1F49",width=500,height=400)
 ##construção de entries e labels de concentração
 
 variaveis = [0,0,0,0,0,0,0,0,0]
@@ -31,13 +31,14 @@ def salvar_valores():
         except:
             concentracoes_inicias.append(0.0)
         contador += 1
-    print(concentracoes_inicias)
+    #print("S0: ", concentracoes_inicias)
     S0 = concentracoes_inicias[:7]
     global Eex
     global Een
     Eex = concentracoes_inicias[7]
     Een = concentracoes_inicias[8]
-    parametros(S0)
+    result = parametros(S0)
+    relatorio = pd.DataFrame(result).to_csv('Resultados-Exo' + str(Eex) + '-Endo' + str(Een) + '.csv', index=False)
     return
 
 #Parâmetros para equações
@@ -51,14 +52,13 @@ def parametros(S0):
     K2 = [1, 0.17, 0.89, 0.17, 0.89, 0.17, 0.89, 0.17, 0.89]
     K = K1 + K2
 
-    # print(len(S0))
     # Exoenzima
     #Eex = 1
     # Endoenzima
     #Een = 1
 
     # Eixo "x", tempo de reação em segundos (s):
-    t_grafico = np.linspace(0, 400)
+    t_grafico = np.linspace(0, 400,5000)
 
     # O Sistema de Equações Diferenciais (EDO):
     # odefun = @(t,G) dfEDO(G,K,Eex,Een);
@@ -66,49 +66,61 @@ def parametros(S0):
     # Solução do sistema de EDO:
     # [X, Y] = ode45(odefun, t_grafico, S0);
     y = odeint(dfB, S0, t_grafico)
-    # print(y)
-
-    figure, eixo = plotter.subplots(1, 2)
-    plotter.subplots_adjust(hspace=2)
-    eixo[0].set_title("G1 visível")
-
-
-    eixo[0].plot(t_grafico, y, label = ["G1","G2","G3","G4","G5","G6","G7"])
-    eixo[0].set_xlabel('Tempo')
-    eixo[0].legend(loc="upper left")
-    eixo[0].set_ylabel('Concentração')
-    # plt.figure("G1 visível")
-    # plt.plot(t_grafico, y)
-    # plt.plot(t_grafico, y[1:])
-
-    print("Cabo")
-    # print(y)
-    # print(y[1:])
-    # print(t_grafico)
-    y2 = []
+    
+    y1 = []  # eixo y para a concentração de G1 apenas
+    y2 = []  # eixo y para a concentração de G2
+    y3 = []  # eixo y para a concentração de G3
+    y4 = []  # eixo y para a concentração de G4  
+    y5 = []  # eixo y para a concentração de G5
+    y6 = []  # eixo y para a concentração de G6
+    y7 = []  # eixo y para a concentração de G7
     i = 0
     while i < len(y):
-        temp = y[i][1:]
-        print(temp)
-        y2.append(temp)
+        # temp = y[i][1:]
+        y1.append(y[i][0:1])
+        y2.append(y[i][1:2])
+        y3.append(y[i][2:3])
+        y4.append(y[i][3:4])
+        y5.append(y[i][4:5])
+        y6.append(y[i][5:6])
+        y7.append(y[i][6:7])
         i += 1
+    resultados = {"Tempo [s]": t_grafico,
+                  "G1": y1,
+                  "G2": y2,
+                  "G3": y3,
+                  "G4": y4,
+                  "G5": y5,
+                  "G6": y6,
+                  "G7": y7,
+                  "Exo": Eex,
+                  "Endo": Een}
 
-    print(y2)
-    #plt.figure("G1 Invisível")
-    #plt.plot(t_grafico, y2)
-    #plt.show()
-    eixo[1].set_title("G1 invisível")
 
-    eixo[1].plot(t_grafico, y2, label = ["G2","G3","G4","G5","G6","G7"])
+    figure, eixo = plotter.subplots(1, 2, constrained_layout=True)
+    eixo[0].set_title("Concentração de G1")
 
-    eixo[1].set_xlabel('Tempo')
 
-    eixo[1].set_ylabel('Concentração')
+    eixo[0].plot(t_grafico, y1, label="G1")
+    eixo[0].set_xlabel('Tempo [s]')
+    eixo[0].legend(loc="upper left")
+    eixo[0].set_ylabel('Concentração [mol/L]')
+    eixo[0].grid(linewidth=0.5, alpha=0.5)
 
+    eixo[1].set_title("Concentração de G2-G7")
+    eixo[1].plot(t_grafico, y2, label="G2", color="crimson")
+    eixo[1].plot(t_grafico, y3, label="G3", color="coral")
+    eixo[1].plot(t_grafico, y4, label="G4", color="#FFC300")
+    eixo[1].plot(t_grafico, y5, label="G5", color="palegreen")
+    eixo[1].plot(t_grafico, y6, label="G6", color="turquoise")
+    eixo[1].plot(t_grafico, y7, label="G7", color="orchid")
+    eixo[1].set_xlabel('Tempo [s]')
+    eixo[1].set_ylabel('Concentração [mol/L]')
     eixo[1].legend(loc="upper right")
-
+    eixo[1].grid(linewidth=0.5, alpha=0.5)
+    
     plotter.show()
-    return
+    return resultados
 
 
 ##Equações diferenciais
@@ -149,13 +161,6 @@ def dfB(y, x):
     ks_7en = K[21]
     Km_7en = K[22]
 
-    # numpy.append(G, S0[0])
-    # numpy.append(G, S0[1])
-    # numpy.append(G, S0[2])
-    # numpy.append(G, S0[3])
-    # numpy.append(G, S0[4])
-    # numpy.append(G, S0[5])
-    # numpy.append(G, S0[6])
     dG1 = (ks_7ex * Eex * G[6] / (
             1 + G[0] / Ki_1ex + G[1] / Km_2ex + G[2] / Km_3ex + G[3] / Km_4ex + G[4] / Km_5ex + G[5] / Km_6ex + G[
         6] / Km_7ex)) + (ks_6ex * Eex * G[5] / (
@@ -220,13 +225,6 @@ def dfB(y, x):
             1 + G[0] / Ki_1en + G[1] / Ki_2en + G[3] / Km_4en + G[4] / Km_5en + G[5] / Km_6en + G[6] / Km_7en))
 
     dG = [dG1, dG2, dG3, dG4, dG5, dG6, dG7]
-    # dG.append(0)
-    # dG.append(0)
-    # dG.append(0)
-    # dG.append(0)
-    # dG.append(0)
-    # dG.append(0)
-    # dG.append(dG7)
 
     return dG
 
@@ -243,8 +241,10 @@ while contador < len(variaveis):
         textos = tk.Label(text="Concentração Exoenzima", fg="white", bg="#1B1F49", width=35, height=3)
     elif contador == 8:
         textos = tk.Label(text="Concentração Endoenzima", fg="white", bg="#1B1F49", width=35, height=3)
+    unidadeDeMedida = tk.Label(text="mol/L", fg="white", bg="#1B1F49", width=15, height=3)
     textos.grid(row=contador+1,column=1)
     concentracao.grid(row=contador + 1, column=2)
+    unidadeDeMedida.grid(row=contador + 1, column=3)
     contador += 1
 
 botao_enviar = tk.Button(window, width=15, text="Enviar!", bg="#aff587", command=salvar_valores)
