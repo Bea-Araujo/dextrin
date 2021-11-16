@@ -77,13 +77,13 @@ def parametros(S0):
     i = 0
     while i < len(y):
         # temp = y[i][1:]
-        y1.append(y[i][0:1])
-        y2.append(y[i][1:2])
-        y3.append(y[i][2:3])
-        y4.append(y[i][3:4])
-        y5.append(y[i][4:5])
-        y6.append(y[i][5:6])
-        y7.append(y[i][6:7])
+        y1.append(y[i][0])
+        y2.append(y[i][1])
+        y3.append(y[i][2])
+        y4.append(y[i][3])
+        y5.append(y[i][4])
+        y6.append(y[i][5])
+        y7.append(y[i][6])
         i += 1
     resultados = {"Tempo [s]": t_grafico,
                   "G1": y1,
@@ -172,7 +172,7 @@ def dfB(y, x):
                   1 + G[0] / Ki_1ex + G[1] / Km_2ex + G[2] / Km_3ex + G[3] / Km_4ex + G[4] / Km_5ex + G[
               5] / Km_6ex + G[6] / Km_7ex)) + (ks_3ex * Eex * G[2] / (
             1 + G[0] / Ki_1ex + G[1] / Km_2ex + G[2] / Km_3ex + G[3] / Km_4ex + G[4] / Km_5ex + G[5] / Km_6ex + G[
-        6] / Km_7ex)) + (ks_2ex * Eex * G[1] / (
+        6] / Km_7ex)) + (2 * ks_2ex * Eex * G[1] / (
             1 + G[0] / Ki_1ex + G[1] / Km_2ex + G[2] / Km_3ex + G[3] / Km_4ex + G[4] / Km_5ex + G[5] / Km_6ex + G[
         6] / Km_7ex))
     dG2 = (ks_3ex * Eex * G[2] / (
